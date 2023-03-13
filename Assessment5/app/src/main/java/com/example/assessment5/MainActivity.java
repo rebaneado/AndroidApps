@@ -8,10 +8,11 @@ import android.util.Log;
 import android.widget.Toast;
 
 import com.example.assessment5.models.Auth;
+import com.example.assessment5.models.Forum;
 
 import java.io.Serializable;
 
-public class MainActivity extends AppCompatActivity implements LoginFragment.LoginListener, RegisterFragment.RegisterListener, CreateForumFragment.CreateForumListener, Serializable {
+public class MainActivity extends AppCompatActivity implements LoginFragment.LoginListener, RegisterFragment.RegisterListener, CreateForumFragment.CreateForumListener, Serializable, ForumsFragment.ForumsFragmentListener {
     Auth mAuth;
 
     @Override
@@ -63,5 +64,20 @@ public class MainActivity extends AppCompatActivity implements LoginFragment.Log
     @Override
     public void completedForumCreate() {
         getSupportFragmentManager().popBackStack();
+    }
+
+    @Override
+    public void logout() {
+
+    }
+
+    @Override
+    public void gotoCreateForum() {
+
+    }
+
+    @Override
+    public void gotoForumMessages(Forum forum) {
+
     }
 }

@@ -19,7 +19,18 @@ import com.example.assessment5.models.Auth;
 import com.example.assessment5.models.Forum;
 import com.example.assessment5.models.Message;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.IOException;
 import java.util.ArrayList;
+
+import okhttp3.Call;
+import okhttp3.Callback;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
 
 public class ForumsFragment extends Fragment {
 
@@ -67,7 +78,7 @@ public class ForumsFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         getActivity().setTitle("Forums");
 
-        binding.textViewWelcome.setText("welcome: " + );
+        binding.textViewWelcome.setText("welcome: " + mAuth.getUser_fname() + " " + mAuth.user_lname);
 
         binding.buttonCreateForum.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -90,8 +101,58 @@ public class ForumsFragment extends Fragment {
         getForums();
     }
 
+    private final OkHttpClient client = new OkHttpClient();
+
+
     void getForums() {
-        //TODO: setup the api call and get the forums
+
+        //token received /posts/login or /posts/signup
+        Request request = new Request.Builder()
+                .url("https://www.theappsdr.com/api/threads")
+                .addHeader("Authorization", "BEARER " + mAuth.getToken())
+                .build();
+
+
+        client.newCall(request).enqueue(new Callback() {
+            @Override
+            public void onFailure(@NonNull Call call, @NonNull IOException e) {
+                e.printStackTrace();
+            }
+
+            @Override
+            public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
+                if (response.isSuccessful()) {
+                    String body = response.body().string();
+
+                    try {
+                        JSONObject jsonObject = new JSONObject(body);
+                        JSONArray jsonArray = jsonObject.getJSONArray("threads");
+
+                        for (int i = 0; i < jsonArray.length(); i++) {
+                            JSONObject forumObject = jsonArray.getJSONObject(i);
+                            Forum forum = new Forum(forumObject);
+
+                            forums.add(forum);
+                        }
+
+                        getActivity().runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                adapter.notifyDataSetChanged();
+                            }
+                        });
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+
+                    }
+                } else {
+
+
+
+                }
+            }
+        });
+
     }
 
     class ForumsAdapter extends RecyclerView.Adapter<ForumsAdapter.ForumsViewHolder> {

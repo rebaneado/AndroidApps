@@ -1,5 +1,6 @@
 package com.example.assessment5.models;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.Serializable;
@@ -11,8 +12,17 @@ public class Forum implements Serializable {
     public Forum() {
     }
 
-    public Forum(JSONObject jsonObject) {
+    public Forum(JSONObject jsonObject) throws JSONException {
         //TODO: parse the json object
+        this.thread_id = jsonObject.getString("thread_id");
+        this.title = jsonObject.getString("title");
+
+        this.created_at = jsonObject.getString("created_at");
+
+        this.createdByFname = jsonObject.getJSONObject("created_by").getString("fname");
+        this.createdByLname = jsonObject.getJSONObject("created_by").getString("lname");
+        this.createdByUserId = jsonObject.getJSONObject("created_by").getString("user_id");
+
 
         /*
      {
