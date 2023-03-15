@@ -47,7 +47,7 @@ public class LoginFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         getActivity().setTitle("Login");
-        binding.editTextEmail.setText("b@b.com");
+        binding.editTextEmail.setText("a@a.com");
         binding.editTextPassword.setText("test123");
 
         binding.buttonCreateNewAccount.setOnClickListener(new View.OnClickListener() {

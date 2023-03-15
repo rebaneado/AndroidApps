@@ -72,7 +72,10 @@ public class MainActivity extends AppCompatActivity implements LoginFragment.Log
     }
 
     @Override
-    public void gotoCreateForum() {
+    public void gotoCreateForum(Auth auth) {
+        getSupportFragmentManager().beginTransaction().replace(R.id.rootView, CreateForumFragment.newInstance(mAuth))
+                .addToBackStack(null)
+                .commit();
 
     }
 

@@ -13,8 +13,41 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.example.assessment5.databinding.FragmentCreateForumBinding;
+import com.example.assessment5.models.Auth;
+
+import java.io.IOException;
+
+import okhttp3.Call;
+import okhttp3.Callback;
+import okhttp3.FormBody;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.RequestBody;
+import okhttp3.Response;
 
 public class CreateForumFragment extends Fragment {
+    Auth mAuth;
+    private static final String ARG_AUTH = "ARG_AUTH";
+    private final OkHttpClient client = new OkHttpClient();
+
+
+
+    public static CreateForumFragment newInstance(Auth auth) {
+        CreateForumFragment fragment = new CreateForumFragment();
+        Bundle args = new Bundle();
+        args.putSerializable(ARG_AUTH,auth);
+        fragment.setArguments(args);
+        return fragment;
+    }
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        if (getArguments() != null) {
+            mAuth = (Auth) getArguments().getSerializable(ARG_AUTH  );
+        }
+    }
+
     public CreateForumFragment() {
         // Required empty public constructor
     }
@@ -44,7 +77,34 @@ public class CreateForumFragment extends Fragment {
                 if(title.isEmpty()) {
                     Toast.makeText(getContext(), "Title is required", Toast.LENGTH_SHORT).show();
                 } else {
-                    //TODO: Create forum using api
+
+                    String url = "https://www.theappsdr.com/api/thread/add";
+
+
+                    RequestBody formBody = new FormBody.Builder()
+                            .add("title", title)
+                            .build();
+
+                    Request request = new Request.Builder()
+                            .url(url)
+                            .addHeader("Authorization", "BEARER " + mAuth.getToken())
+                            //.addHeader("Content-Type", thr)
+                            .post(formBody)
+                            .build();
+
+                    client.newCall(request).enqueue(new Callback() {
+                        @Override
+                        public void onFailure(@NonNull Call call, @NonNull IOException e) {
+                            e.printStackTrace();
+                        }
+
+                        @Override
+                        public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
+                            if (response.isSuccessful()) {
+                                mListener.completedForumCreate();
+                            }
+                        }
+                    });
                 }
             }
         });

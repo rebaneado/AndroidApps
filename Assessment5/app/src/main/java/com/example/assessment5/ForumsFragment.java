@@ -12,6 +12,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.example.assessment5.databinding.ForumRowItemBinding;
 import com.example.assessment5.databinding.FragmentForumsBinding;
@@ -60,9 +61,6 @@ public class ForumsFragment extends Fragment {
 //!to here
 
 
-
-
-
     FragmentForumsBinding binding;
     ArrayList<Forum> forums = new ArrayList<>();
     ForumsAdapter adapter;
@@ -83,7 +81,7 @@ public class ForumsFragment extends Fragment {
         binding.buttonCreateForum.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                mListener.gotoCreateForum();
+                mListener.gotoCreateForum(mAuth);
             }
         });
 
@@ -100,9 +98,7 @@ public class ForumsFragment extends Fragment {
 
         getForums();
     }
-
     private final OkHttpClient client = new OkHttpClient();
-
 
     void getForums() {
 
@@ -122,6 +118,7 @@ public class ForumsFragment extends Fragment {
             @Override
             public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
                 if (response.isSuccessful()) {
+                    forums.clear();
                     String body = response.body().string();
 
                     try {
@@ -146,9 +143,6 @@ public class ForumsFragment extends Fragment {
 
                     }
                 } else {
-
-
-
                 }
             }
         });
@@ -193,7 +187,55 @@ public class ForumsFragment extends Fragment {
                 mBinding.textViewForumTitle.setText(mForum.getTitle());
                 mBinding.textViewForumCreatedAt.setText(forum.getCreated_at());
                 mBinding.textViewForumCreatorName.setText(forum.getCreatedByFname() + " " + forum.getCreatedByLname());
-                //TODO: setup the rest of the UI the delete icon ..
+
+                if (mForum.getCreatedByUserId().equals(mAuth.user_id)) {
+                    mBinding.imageViewDeleteForum.setVisibility(View.VISIBLE);
+                    mBinding.imageViewDeleteForum.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            String url = "https://www.theappsdr.com/api/thread/delete/" + mForum.getThread_id();
+                            Request request = new Request.Builder()
+                                    .url(url)
+                                    .addHeader("Authorization" , "BEARER " + mAuth.getToken())
+                                    .build();
+
+
+                            client.newCall(request).enqueue(new Callback() {
+                                @Override
+                                public void onFailure(@NonNull Call call, @NonNull IOException e) {
+                                    e.printStackTrace();
+                                }
+
+                                @Override
+                                public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
+                                    if (response.isSuccessful()) {
+                                        String body = response.body().string();
+                                        getActivity().runOnUiThread(new Runnable() {
+                                            @Override
+                                            public void run() {
+                                                getForums();
+
+                                            }
+                                        });
+                                        
+                                    } else {
+                                        getActivity().runOnUiThread(new Runnable() {
+                                            @Override
+                                            public void run() {
+                                                Toast.makeText(getActivity(), "Error deleting forum", Toast.LENGTH_SHORT).show();
+
+                                            }
+                                        });
+                                    }
+                                }
+                            });
+
+                        }
+                    });
+                } else {
+                    mBinding.imageViewDeleteForum.setVisibility(View.INVISIBLE);
+
+                }
             }
         }
     }
@@ -211,7 +253,7 @@ public class ForumsFragment extends Fragment {
 
     interface ForumsFragmentListener {
         void logout();
-        void gotoCreateForum();
+        void gotoCreateForum(Auth auth);
         void gotoForumMessages(Forum forum);
     }
 }

@@ -111,6 +111,7 @@ public class ForumMessagesFragment extends Fragment {
             }
 
             void setupUI(Message message){
+
                 this.mMessage = message;
                 mBinding.textViewMessage.setText(message.getMessage());
                 mBinding.textViewMessageCreatedAt.setText(message.getCreated_at());
