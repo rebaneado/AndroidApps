@@ -68,6 +68,7 @@ public class MainActivity extends AppCompatActivity implements LoginFragment.Log
 
     @Override
     public void logout() {
+        //TODO: at 45 mins
 
     }
 
