@@ -1,5 +1,6 @@
 package com.example.assessment5.models;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 
 public class Message {
@@ -9,7 +10,7 @@ public class Message {
     public Message() {
     }
 
-    public Message(JSONObject jsonObject) {
+    public Message(JSONObject jsonObject) throws JSONException {
         //TODO: parse the json object
          /*
     {
@@ -23,6 +24,17 @@ public class Message {
             "created_at": "2023-02-22 19:36:32"
         },
      */
+
+
+
+        this.message_id = jsonObject.getString("message_id");
+        this.message = jsonObject.getString("message");
+        this.created_at = jsonObject.getString("created_at");
+
+        this.createdByFname = jsonObject.getJSONObject("created_by").getString("fname");
+        this.createdByLname = jsonObject.getJSONObject("created_by").getString("lname");
+        this.createdByUserId = jsonObject.getJSONObject("created_by").getString("user_id");
+
     }
 
     public String getMessage_id() {

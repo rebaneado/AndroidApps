@@ -2,13 +2,14 @@ package com.example.assessment5;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.content.Intent;
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
-import android.widget.Toast;
 
 import com.example.assessment5.models.Auth;
 import com.example.assessment5.models.Forum;
+import com.google.gson.Gson;
 
 import java.io.Serializable;
 
@@ -20,10 +21,30 @@ public class MainActivity extends AppCompatActivity implements LoginFragment.Log
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        //TODO: Check if the user is authenticated or no..
-        getSupportFragmentManager().beginTransaction()
-                .add(R.id.rootView, new LoginFragment())
-                .commit();
+        SharedPreferences sharedPref = getSharedPreferences(getString((R.string.preference_file_key)), Context.MODE_PRIVATE);
+        if (sharedPref.contains("auth")) {
+            String authStr = sharedPref.getString("auth", null);
+            if (authStr == null) {
+                getSupportFragmentManager().beginTransaction()
+                        .add(R.id.rootView, new LoginFragment())
+                        .commit();
+            } else {
+                //show forums fragment
+                Gson gson = new Gson();
+                mAuth = gson.fromJson(authStr, Auth.class);
+
+                getSupportFragmentManager().beginTransaction()
+                        .replace(R.id.rootView,ForumsFragment.newInstance(mAuth)).commit();
+
+            }
+
+        } else {
+            getSupportFragmentManager().beginTransaction()
+                    .add(R.id.rootView, new LoginFragment())
+                    .commit();
+        }
+
+
     }
 
     @Override
@@ -42,8 +63,17 @@ public class MainActivity extends AppCompatActivity implements LoginFragment.Log
 
     @Override
     public void authSuccessful(Auth auth) {
-        Log.d("demo", "authSuccessful: ");
         this.mAuth = auth;
+
+        SharedPreferences sharedPref = getSharedPreferences(getString((R.string.preference_file_key)), Context.MODE_PRIVATE);
+
+        SharedPreferences.Editor editor = sharedPref.edit ();
+        Gson gson = new Gson();
+        editor.putString("auth", gson.toJson(auth));
+        editor.apply();
+
+
+
         getSupportFragmentManager().beginTransaction()
                 .replace(R.id.rootView,ForumsFragment.newInstance(auth)).commit();
 
@@ -68,7 +98,17 @@ public class MainActivity extends AppCompatActivity implements LoginFragment.Log
 
     @Override
     public void logout() {
-        //TODO: at 45 mins
+        mAuth = null;
+
+        SharedPreferences sharedPref = getSharedPreferences(getString((R.string.preference_file_key)), Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPref.edit ();
+
+        editor.remove("auth");
+        editor.apply();
+
+        getSupportFragmentManager().beginTransaction().replace(R.id.rootView,new LoginFragment()).commit();
+        //TODO: at 45 mins - completed but got stuck on the go to register function =- doesnt post IDK why
+
 
     }
 
@@ -82,6 +122,7 @@ public class MainActivity extends AppCompatActivity implements LoginFragment.Log
 
     @Override
     public void gotoForumMessages(Forum forum) {
+        getSupportFragmentManager().beginTransaction().replace(R.id.rootView, ForumMessagesFragment.newInstance(forum, mAuth)).addToBackStack(null).commit();
 
     }
 }
