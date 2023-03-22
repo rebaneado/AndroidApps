@@ -1,4 +1,4 @@
-package edu.uncc.inclass07;
+package edu.uncc.inclass08;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -7,7 +7,7 @@ import android.os.Bundle;
 import com.google.firebase.auth.FirebaseAuth;
 
 public class MainActivity extends AppCompatActivity implements LoginFragment.LoginListener,
-        SignUpFragment.SignUpListener, PostsFragment.PostsListener, CreatePostFragment.CreatePostListener {
+        SignUpFragment.SignUpListener, GradesFragment.GradesListener, AddCourseFragment.AddCourseListener {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -15,53 +15,48 @@ public class MainActivity extends AppCompatActivity implements LoginFragment.Log
         setContentView(R.layout.activity_main);
 
         if (FirebaseAuth.getInstance().getCurrentUser() == null) {
-            getSupportFragmentManager().beginTransaction().add(R.id.containerView, new SignUpFragment()).commit();
+            getSupportFragmentManager().beginTransaction()
+                    .add(R.id.rootView, new LoginFragment())
+                    .commit();
         } else {
-            getSupportFragmentManager().beginTransaction().add(R.id.containerView, new PostsFragment()).commit();
-
+            getSupportFragmentManager().beginTransaction()
+                    .add(R.id.rootView, new GradesFragment())
+                    .commit();
         }
-
-
     }
 
     @Override
     public void createNewAccount() {
         getSupportFragmentManager().beginTransaction()
-                .replace(R.id.containerView, new SignUpFragment())
+                .replace(R.id.rootView, new SignUpFragment())
                 .commit();
-    }
-
-    @Override
-    public void authSuccessful() {
-        getSupportFragmentManager().beginTransaction().replace(R.id.containerView, new PostsFragment()).commit();
     }
 
     @Override
     public void login() {
         getSupportFragmentManager().beginTransaction()
-                .replace(R.id.containerView, new LoginFragment())
+                .replace(R.id.rootView, new LoginFragment())
                 .commit();
     }
 
     @Override
-    public void logout() {
-        FirebaseAuth.getInstance().signOut();
+    public void authSuccessful() {
         getSupportFragmentManager().beginTransaction()
-                .replace(R.id.containerView, new LoginFragment())
+                .replace(R.id.rootView, new GradesFragment())
                 .commit();
-
     }
 
     @Override
-    public void createPost() {
+    public void gotoAddCourse() {
         getSupportFragmentManager().beginTransaction()
-                .replace(R.id.containerView, new CreatePostFragment())
+                .replace(R.id.rootView, new AddCourseFragment())
                 .addToBackStack(null)
                 .commit();
     }
 
     @Override
-    public void goBackToPosts() {
+    public void goBackToGrades() {
         getSupportFragmentManager().popBackStack();
+
     }
 }

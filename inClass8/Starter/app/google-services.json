@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "442315193828",
+    "project_id": "inclass8-e060d",
+    "storage_bucket": "inclass8-e060d.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:442315193828:android:d5dcaca736876c81079bf1",
+        "android_client_info": {
+          "package_name": "edu.uncc.inclass08"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "442315193828-1h17rba5avjrr4b9u4obp3v8sjik2kec.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBLOI43Hc7pPy3vhWmRcrd_XXHmV8gxyoc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "442315193828-1h17rba5avjrr4b9u4obp3v8sjik2kec.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

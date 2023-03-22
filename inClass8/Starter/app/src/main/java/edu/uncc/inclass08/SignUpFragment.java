@@ -1,4 +1,4 @@
-package edu.uncc.inclass07;
+package edu.uncc.inclass08;
 
 import android.content.Context;
 import android.os.Bundle;
@@ -16,14 +16,11 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.UserProfileChangeRequest;
 
-import edu.uncc.inclass07.databinding.FragmentSignUpBinding;
+import edu.uncc.inclass08.databinding.FragmentSignUpBinding;
 
 public class SignUpFragment extends Fragment {
-
-
     public SignUpFragment() {
         // Required empty public constructor
     }
@@ -42,6 +39,7 @@ public class SignUpFragment extends Fragment {
         return binding.getRoot();
     }
 
+    FirebaseAuth mAuth = FirebaseAuth.getInstance();
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
@@ -66,40 +64,36 @@ public class SignUpFragment extends Fragment {
                 } else if (password.isEmpty()){
                     Toast.makeText(getActivity(), "Enter valid password!", Toast.LENGTH_SHORT).show();
                 } else {
-                    FirebaseAuth mAuth = FirebaseAuth.getInstance();
+
+
                     mAuth.createUserWithEmailAndPassword(email, password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
                         @Override
                         public void onComplete(@NonNull Task<AuthResult> task) {
-                            if (task.isSuccessful()) {
-                                Toast.makeText(getActivity(), "SUCCESSFUL CREATION ", Toast.LENGTH_SHORT);
-                                FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+                            if(task.isSuccessful()){
+                                //update FirebaseUser profile firebase
+
 
                                 UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder()
                                         .setDisplayName(name)
                                         .build();
 
-                                user.updateProfile(profileUpdates).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                mAuth.getCurrentUser().updateProfile(profileUpdates).addOnCompleteListener(new OnCompleteListener<Void>() {
                                     @Override
                                     public void onComplete(@NonNull Task<Void> task) {
-                                        if (task.isSuccessful()) {
-                                            mListener.authSuccessful();
+                                        if(task.isSuccessful()){
 
+
+                                            mListener.authSuccessful();
                                         } else {
-                                            Toast.makeText(getActivity(), "Can not update profile", Toast.LENGTH_SHORT).show();
+                                            Toast.makeText(getActivity(), "Error: " + task.getException().getMessage(), Toast.LENGTH_SHORT).show();
                                         }
                                     }
                                 });
-
-
-
-
                             } else {
-                                Toast.makeText(getActivity(), "Not successcul creation", Toast.LENGTH_SHORT);
+                                Toast.makeText(getActivity(), "Error: " + task.getException().getMessage(), Toast.LENGTH_SHORT).show();
                             }
-
                         }
                     });
-
                 }
             }
         });
@@ -117,7 +111,7 @@ public class SignUpFragment extends Fragment {
     }
 
     interface SignUpListener {
-        void authSuccessful();
         void login();
+        void authSuccessful();
     }
 }
