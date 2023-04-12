@@ -11,6 +11,9 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
@@ -55,6 +58,8 @@ public class GradesFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        setHasOptionsMenu(true);
+
         FirebaseAuth mAuth = FirebaseAuth.getInstance();
         if (mAuth != null) {
             getActivity().setTitle("welcome: " + mAuth.getCurrentUser().getDisplayName());
@@ -91,6 +96,26 @@ public class GradesFragment extends Fragment {
         adapter = new GradeAdapter();
         binding.recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         binding.recyclerView.setAdapter(adapter);
+
+    }
+
+    @Override
+    public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
+        super.onCreateOptionsMenu(menu, inflater);
+        inflater.inflate(R.menu.main_menu, menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        if (item.getItemId() == R.id.action_add) {
+            mListener.gotoAddCourse();
+            return true;
+        } else if (item.getItemId() == R.id.action_logout) {
+            mListener.logout();
+            return true;
+        }
+
+        return super.onOptionsItemSelected(item);
 
     }
 
@@ -182,5 +207,7 @@ public class GradesFragment extends Fragment {
 
     interface GradesListener{
         void gotoAddCourse();
+
+        void logout();
     }
 }

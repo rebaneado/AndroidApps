@@ -55,6 +55,12 @@ public class MainActivity extends AppCompatActivity implements LoginFragment.Log
     }
 
     @Override
+    public void logout() {
+        FirebaseAuth.getInstance().signOut();
+        getSupportFragmentManager().beginTransaction().replace(R.id.rootView, new LoginFragment()).commit();
+    }
+
+    @Override
     public void goBackToGrades() {
         getSupportFragmentManager().popBackStack();
 
