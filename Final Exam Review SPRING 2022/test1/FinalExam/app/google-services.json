@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "790787110606",
+    "project_id": "finalexam2022spring",
+    "storage_bucket": "finalexam2022spring.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:790787110606:android:e862c2f301c1236a36029f",
+        "android_client_info": {
+          "package_name": "edu.uncc.finalexam"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "790787110606-u61tio0tksrfl9u23pde49tu07hak200.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAddOn7K8T0Pnv3R4ZMCP9_vT_9MrgLwkk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "790787110606-u61tio0tksrfl9u23pde49tu07hak200.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

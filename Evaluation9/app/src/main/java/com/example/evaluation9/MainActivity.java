@@ -32,12 +32,6 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
 
-
-
-
-        //TODO: goto https://console.cloud.google.com/ to setup the google maps sdk for this project
-        //TODO: use the https://developers.google.com/maps/documentation/android-sdk/config to setup the google maps sdk in this project
-
     }
     @Override
     public void onMapReady(GoogleMap googleMap) {

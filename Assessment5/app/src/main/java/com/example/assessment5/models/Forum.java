@@ -16,7 +16,6 @@ public class Forum implements Serializable {
         //TODO: parse the json object
         this.thread_id = jsonObject.getString("thread_id");
         this.title = jsonObject.getString("title");
-
         this.created_at = jsonObject.getString("created_at");
 
         this.createdByFname = jsonObject.getJSONObject("created_by").getString("fname");

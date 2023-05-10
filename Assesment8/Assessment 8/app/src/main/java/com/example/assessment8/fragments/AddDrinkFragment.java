@@ -25,7 +25,7 @@ public class AddDrinkFragment extends Fragment {
     FragmentAddDrinkBinding binding;
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    public View (LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         binding = FragmentAddDrinkBinding.inflate(inflater, container, false);
         return binding.getRoot();
     }
