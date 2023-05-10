@@ -6,14 +6,18 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Adapter;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
+import com.google.firebase.firestore.auth.User;
 import com.squareup.okhttp.Callback;
 import com.squareup.okhttp.OkHttpClient;
 import com.squareup.okhttp.Request;
@@ -38,10 +42,7 @@ public class NewsFragment extends Fragment {
         super.onCreate(savedInstanceState);
     }
 
-    FragmentNewsBinding binding;
-    ArrayList<News> news = new ArrayList<>();
-    ArrayAdapter <News> adapter;
-//    NewsAdapter adapter;
+
 
 
     @Override
@@ -52,6 +53,26 @@ public class NewsFragment extends Fragment {
         return binding.getRoot();
 
     }
+    //!WIP------------------------------------------------------------------------------------------------------------------------------
+
+    FragmentNewsBinding binding;
+    NewsAdapter adapter;
+   ArrayList<News> news = new ArrayList<>();
+    ListView listView;
+
+
+    //!WIP------------------------------------------------------------------------------------------------------------------------------
+
+    //!uncoment 3 lines below to go to working state
+//    FragmentNewsBinding binding;
+//    ArrayList<News> news = new ArrayList<>();
+//    ArrayAdapter<News> adapter;
+
+    //!here are the updates betweehn these lines
+
+
+
+    //!ends here with updates-------------------
 
     private final OkHttpClient client = new OkHttpClient();
 
@@ -74,22 +95,22 @@ public class NewsFragment extends Fragment {
         });
 
 
-//        ListView listView;
-//        listView = findViewById(R.id.listView);
-//        adapter = new ArrayAdapter<> ( context: this, android.R. layout.simple_list_item_1, android.R.id.texti, users);
-//        listView.setAdapter (adapter);
-//        listView.setOnItemClickListener(new AdapterView. OnItemClickListener () {
+        //!WIP------------------------------------------------------------------------------------------------------------------------------
+
+//        adapter = new ArrayAdapter<>(this, binding.listViewNews.findViewById(R.id.listViewNews), android.R.id.text1, news);
+
+//        binding.listViewNews.setOnClickListener(new AdapterView.onCl);
+//instead of get context on first param its this on video
+        listView = binding.listViewNews;
+        adapter = new NewsAdapter(getContext(), R.layout.news_row_item, news);
+        listView.setAdapter(adapter);
+
+
+        //!WIP------------------------------------------------------------------------------------------------------------------------------^^^ BELOW UNCOMENT 2 LINES
+//        adapter = new ArrayAdapter<>(getActivity(), android.R.layout.simple_list_item_1, news);
 //
 //
-
-        //https://newsapi.org/v2/top-headlines?country=us&apiKey=ac33c4abec524be7a1ed3bb4948dc8ac&category=technology&pageSize=50
-        //this is the api .. need to set apiKey to your API Key!!
-
-//key: https://newsapi.org/v2/top-headlines?country=us&apiKey=ac33c4abec524be7a1ed3bb4948dc8ac&category=technology&pageSize=50
-
-        adapter = new ArrayAdapter<>(getActivity(), android.R.layout.simple_list_item_1,students);
-        adapter = new ArrayAdapter<>(getActivity(),binding.listViewNews,news);
-        binding.listViewNews.setAdapter(adapter);
+//        binding.listViewNews.setAdapter(adapter);
 
     }
 
@@ -110,7 +131,7 @@ public class NewsFragment extends Fragment {
                 if (response.isSuccessful()) {
                     news.clear();
                     String body = response.body().string();
-                    Log.d("demo", "onResponse   : " + body);
+                    //Log.d("demo", "onResponse   : " + body);
 
                     try {
                         JSONObject jsonObject = new JSONObject(body);
@@ -126,7 +147,7 @@ public class NewsFragment extends Fragment {
                             @Override
                             public void run() {
 //                            getNews();
-                                //adapter.notifyDataSetChanged
+                                adapter.notifyDataSetChanged();
 
                                 //todo above
 
@@ -145,6 +166,30 @@ public class NewsFragment extends Fragment {
 
     NewsFragmentListener mListener;
 
+    class NewsAdapter2 extends RecyclerView.Adapter<NewsAdapter2.NewsViewHolder> {
+        @NonNull
+        @Override
+        public NewsViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+            return null;
+        }
+
+        @Override
+        public void onBindViewHolder(@NonNull NewsViewHolder holder, int position) {
+
+        }
+
+        @Override
+        public int getItemCount() {
+            return 0;
+        }
+
+        class NewsViewHolder extends RecyclerView.ViewHolder{
+
+            public NewsViewHolder(@NonNull View itemView) {
+                super(itemView);
+            }
+        }
+    }
     @Override
     public void onAttach(@NonNull Context context) {
         super.onAttach(context);
